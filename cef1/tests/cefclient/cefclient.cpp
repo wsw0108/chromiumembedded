@@ -91,7 +91,7 @@ void UIT_RunPluginInfoTest(CefRefPtr<CefBrowser> browser) {
   // Display all other plugins.
   size_t count = CefGetWebPluginCount();
   for (size_t i = 0; i < count; ++i) {
-    CefRefPtr<CefWebPluginInfo> info = CefGetWebPluginInfo(i);
+    CefRefPtr<CefWebPluginInfo> info = CefGetWebPluginInfo(static_cast<int>(i));
     ASSERT(info.get());
     if (!flash_name.empty() && info->GetName() == flash_name)
       continue;

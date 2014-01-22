@@ -47,7 +47,7 @@ class ClientV8FunctionHandler : public CefV8Handler {
       // return the result of calling a function belonging to that object.  The
       // first arument is the function that will return an object and the second
       // argument is the function that will be called on that returned object.
-      int argSize = arguments.size();
+      size_t argSize = arguments.size();
       if (argSize < 2 || !arguments[0]->IsFunction()
           || !arguments[1]->IsString())
         return false;
@@ -74,7 +74,7 @@ class ClientV8FunctionHandler : public CefV8Handler {
         return false;
 
       // Pass any additional arguments on to the member function.
-      for (int i = 2; i < argSize; ++i)
+      for (size_t i = 2; i < argSize; ++i)
         argList.push_back(arguments[i]);
 
       // Execute the member function.

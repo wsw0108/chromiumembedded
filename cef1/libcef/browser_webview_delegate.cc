@@ -30,6 +30,7 @@
 #include "base/process_util.h"
 #include "base/string_util.h"
 #include "base/stringprintf.h"
+#include "media/base/media_log.h"
 #include "net/base/net_errors.h"
 #include "third_party/WebKit/Source/Platform/chromium/public/Platform.h"
 #include "third_party/WebKit/Source/Platform/chromium/public/WebCString.h"
@@ -66,6 +67,10 @@
 #include "webkit/glue/glue_serialize.h"
 #include "webkit/glue/webpreferences.h"
 #include "webkit/glue/weburlrequest_extradata_impl.h"
+#include "webkit/glue/webkit_glue.h"
+#include "webkit/media/webmediaplayer_impl.h"
+#include "webkit/media/webmediaplayer_delegate.h"
+#include "webkit/media/webmediaplayer_params.h"
 #include "webkit/plugins/npapi/plugin_list.h"
 #include "webkit/plugins/npapi/webplugin_delegate_impl.h"
 #include "webkit/plugins/npapi/webplugin_impl.h"
@@ -673,6 +678,18 @@ WebPlugin* BrowserWebViewDelegate::createPlugin(
 
   return new webkit::npapi::WebPluginImpl(
       frame, params, plugins.front().path, AsWeakPtr());
+}
+
+WebMediaPlayer* BrowserWebViewDelegate::createMediaPlayer(
+    WebFrame* frame, const WebURL& url, WebMediaPlayerClient* client) {
+  webkit_media::WebMediaPlayerParams params(
+    NULL, NULL, new media::MediaLog());
+
+  return new webkit_media::WebMediaPlayerImpl(
+    frame,
+    client,
+    base::WeakPtr<webkit_media::WebMediaPlayerDelegate>(),
+    params);
 }
 
 WebApplicationCacheHost* BrowserWebViewDelegate::createApplicationCacheHost(

@@ -305,7 +305,7 @@ INT_PTR CALLBACK DialogProc(HWND dialog,
                             LPARAM lparam) {
   switch (message) {
     case WM_INITDIALOG: {
-      SetWindowLongPtr(dialog, DWL_USER, static_cast<LONG_PTR>(lparam));
+      SetWindowLongPtr(dialog, DWLP_USER, lparam);
       DialogConfig* config = reinterpret_cast<DialogConfig*>(lparam);
       SetWindowText(dialog, config->label.c_str());
       SetDlgItemText(dialog, IDC_DIALOGTEXT, config->message.c_str());
@@ -314,14 +314,14 @@ INT_PTR CALLBACK DialogProc(HWND dialog,
     }
     case WM_CLOSE: {
       DialogConfig* config = reinterpret_cast<DialogConfig*>(
-          GetWindowLongPtr(dialog, DWL_USER));
+          GetWindowLongPtr(dialog, DWLP_USER));
       if (config)
         EndDialog(dialog, IDCANCEL);
       break;
     }
     case WM_COMMAND: {
       DialogConfig* config = reinterpret_cast<DialogConfig*>(
-          GetWindowLongPtr(dialog, DWL_USER));
+          GetWindowLongPtr(dialog, DWLP_USER));
       bool finish = false;
       switch (LOWORD(wparam)) {
         case IDOK: {
@@ -534,7 +534,7 @@ void BrowserWebViewDelegate::runModal() {
 
     if (child && owner) {
       // Set the owner so that Windows keeps this window above the owner.
-      ::SetWindowLong(child, GWL_HWNDPARENT, (LONG)owner);
+      ::SetParent(child, owner);
       // Disable the owner if it is enabled so that you can't interact with it.
       // while this child window is open.
       if (::IsWindowEnabled(owner)) {

@@ -336,8 +336,8 @@ class ClientOSRHandler : public CefClient,
       return;
 
     // Change the plugin window's cursor.
-    SetClassLong(plugin_->hWnd, GCL_HCURSOR,
-        static_cast<LONG>(reinterpret_cast<LONG_PTR>(cursor)));
+    SetClassLongPtr(plugin_->hWnd, GCLP_HCURSOR,
+        reinterpret_cast<LONG_PTR>(cursor));
     SetCursor(cursor);
   }
 

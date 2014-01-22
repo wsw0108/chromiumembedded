@@ -301,8 +301,8 @@ void WebWidgetHost::ScrollRect(int dx, int dy, const gfx::Rect& clip_rect) {
 
 void WebWidgetHost::SetCursor(HCURSOR cursor) {
   DCHECK(view_);
-  SetClassLong(view_, GCL_HCURSOR,
-      static_cast<LONG>(reinterpret_cast<LONG_PTR>(cursor)));
+  SetClassLongPtr(view_, GCLP_HCURSOR,
+      reinterpret_cast<LONG_PTR>(cursor));
   ::SetCursor(cursor);
 }
 

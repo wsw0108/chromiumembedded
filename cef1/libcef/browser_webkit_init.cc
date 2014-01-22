@@ -12,6 +12,7 @@
 #include "base/metrics/stats_counters.h"
 #include "base/path_service.h"
 #include "base/utf_string_conversions.h"
+#include "media/base/media.h"
 #include "third_party/WebKit/Source/Platform/chromium/public/WebHyphenator.h"
 #include "third_party/WebKit/Source/Platform/chromium/public/WebPrerenderingSupport.h"
 #include "third_party/WebKit/Source/WebKit/chromium/public/WebDatabase.h"
@@ -45,6 +46,7 @@ BrowserWebKitInit::BrowserWebKitInit()
   v8::V8::SetCounterFunction(base::StatsTable::FindLocation);
 
   WebKit::initialize(this);
+  WebKit::setIDBFactory(this->idbFactory());
   WebKit::setLayoutTestMode(false);
   WebKit::WebRuntimeFeatures::enableSockets(true);
   WebKit::WebRuntimeFeatures::enableApplicationCache(true);
@@ -60,6 +62,12 @@ BrowserWebKitInit::BrowserWebKitInit()
   WebKit::WebRuntimeFeatures::enableDeviceMotion(false);
   WebKit::WebRuntimeFeatures::enableDeviceOrientation(false);
 
+  base::FilePath media_path;
+  PathService::Get(base::DIR_MODULE, &media_path);
+  if (!media_path.empty())
+      media::InitializeMediaLibrary(media_path);
+  WebKit::WebRuntimeFeatures::enableMediaPlayer(media::IsMediaLibraryInitialized());
+  
   prerendering_support_.reset(new BrowserPrerenderingSupport);
   WebKit::WebPrerenderingSupport::initialize(prerendering_support_.get());
 
